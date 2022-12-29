@@ -76,12 +76,6 @@ export class attachmentUtils {
           Bucket: this.bucketName,
           Key: attachmentId,
           Body: convertedImgBuffer
-        }, function(err, data) {
-          if (err) {
-            logger.error('put attachment failed: ' + err.message)
-            throw new Error('Fail to get attachment')
-          }
-          else logger.error('put attachment success :' + data)
         }
     ).promise();
 
