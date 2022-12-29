@@ -6,6 +6,7 @@ import { UpdateTodoRequest } from '../requests/UpdateTodoRequest'
 import * as uuid from 'uuid'
 import { todoAccess } from './todosAccess'
 import { createLogger } from '../utils/logger'
+import {ResizeImageRequest} from "../requests/ResizeImageRequest";
 
 const logger = createLogger('todo')
 
@@ -56,6 +57,10 @@ export async function deleteToDoItem(userId: string, todoId: string) {
 
   checkPermission(userId, currentItem);
 
+  if (!currentItem.attachmentUrl) {
+    await todosStorage.deleteS3Object(currentItem.attachmentUrl.split('/')[3])
+  }
+
   await todosAccess.deleteToDoItem(todoId, userId);
 }
 
@@ -72,6 +77,20 @@ export async function updateAttachmentUrl(todoId: string, userId: string, attach
 
 export async function getSignedUploadUrl(attachmentId: string): Promise<string> {
   return await todosStorage.getUploadUrlToS3(attachmentId);
+}
+
+export async function resizeTodoImg(todoId: string, userId: string, resizeImage: ResizeImageRequest) {
+  logger.error('--- Start resizing the todo image ---')
+  const currentItem = await todosAccess.getToDoItem(todoId, userId);
+
+  checkPermission(userId, currentItem);
+
+  if (!currentItem.attachmentUrl) throw new Error("Item doesn't have image");
+  logger.error('--- attachmentUrl --- ' + currentItem.attachmentUrl)
+
+
+  await todosStorage.resizeImage(currentItem.attachmentUrl.split('/')[3], resizeImage.width, resizeImage.height)
+  logger.error('--- End resizing the todo image ---')
 }
 
 function checkPermission(currentUser: string, toDoItem: TodoItem) {

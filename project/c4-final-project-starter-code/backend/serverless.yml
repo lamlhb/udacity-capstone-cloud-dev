@@ -1,7 +1,7 @@
 #  Change the name of the org
 org: lamlhb
-app: serverless-todo-app-lamlhb
-service: serverless-todo-app-lamlhb
+app: sls-todo-app-lamlhb-caps
+service: sls-todo-app-lamlhb-caps
 
 plugins:
   - serverless-webpack
@@ -27,7 +27,7 @@ provider:
   environment:
     TODOS_TABLE: Todos-${self:provider.stage}
     TODOS_CREATED_AT_INDEX: CreatedAtIndex
-    ATTACHMENT_S3_BUCKET: serverless-c4-todo-images-lamlhb-${self:provider.stage}
+    ATTACHMENT_S3_BUCKET: serverless-todo-images-lamlhb-capstone-${self:provider.stage}
     SIGNED_URL_EXPIRATION: 300
 
   logs:
@@ -57,6 +57,9 @@ custom:
       - name: UpdateTodoModel
         contentType: application/json
         schema: ${file(models/update-todo-model.json)}
+      - name: ResizeTodoImgModel
+        contentType: application/json
+        schema: ${file(models/resize-todo-img-model.json)}
 
 functions:
 
@@ -171,6 +174,32 @@ functions:
           - dynamodb:UpdateItem
           - dynamodb:GetItem
         Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}
+
+  ResizeTodoImg:
+    handler: src/lambda/http/resizeImage.handler
+    events:
+      - http:
+          method: post
+          path: todos/{todoId}/resize
+          cors: true
+          authorizer: Auth
+          reqValidatorName: RequestBodyValidator
+          documentation:
+            summary: resize the todo image
+            description: resize the todo image
+            requestModels:
+              'application/json': ResizeTodoImgModel
+    iamRoleStatementsInherit: true
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:GetItem
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}
+      - Effect: Allow
+        Action:
+          - s3:PutObject
+          - s3:GetObject
+        Resource: arn:aws:s3:::${self:provider.environment.ATTACHMENT_S3_BUCKET}/*
 
 resources:
   Resources:
