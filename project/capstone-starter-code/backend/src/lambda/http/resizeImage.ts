@@ -3,7 +3,7 @@ import 'source-map-support/register'
 import * as middy from 'middy'
 import { cors } from 'middy/middlewares'
 import { getUserId } from '../utils';
-import { resizeTodoImg } from '../../helpers/todos'
+import { resizeTodoImg } from '../../business/todos'
 import {ResizeImageRequest} from "../../requests/ResizeImageRequest";
 import {createLogger} from "../../utils/logger";
 

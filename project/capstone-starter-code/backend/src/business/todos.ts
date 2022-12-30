@@ -1,10 +1,10 @@
 // import todoAccess from './todoAccess';
-import { attachmentUtils } from './attachmentUtils';
+import { attachmentUtils } from '../helpers/attachmentUtils';
 import { TodoItem } from '../models/TodoItem'
 import { CreateTodoRequest } from '../requests/CreateTodoRequest'
 import { UpdateTodoRequest } from '../requests/UpdateTodoRequest'
 import * as uuid from 'uuid'
-import { todoAccess } from './todosAccess'
+import { todoAccess } from '../dataAccess/todosAccess'
 import { createLogger } from '../utils/logger'
 import {ResizeImageRequest} from "../requests/ResizeImageRequest";
 
