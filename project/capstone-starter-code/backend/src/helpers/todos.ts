@@ -57,8 +57,8 @@ export async function deleteToDoItem(userId: string, todoId: string) {
 
   checkPermission(userId, currentItem);
 
-  if (!currentItem.attachmentUrl) {
-    await todosStorage.deleteS3Object(currentItem.attachmentUrl.split('/')[3])
+  if (currentItem.attachmentUrl) {
+    await todosStorage.deleteS3Object(currentItem.attachmentUrl.split('/')[3] + '/' + currentItem.attachmentUrl.split('/')[4])
   }
 
   await todosAccess.deleteToDoItem(todoId, userId);

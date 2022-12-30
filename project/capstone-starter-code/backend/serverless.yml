@@ -153,6 +153,10 @@ functions:
           - dynamodb:DeleteItem
           - dynamodb:GetItem
         Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}
+      - Effect: Allow
+        Action:
+          - s3:DeleteObject
+        Resource: arn:aws:s3:::${self:provider.environment.ATTACHMENT_S3_BUCKET}/*
 
   # Configure this function
   # Provide property for setting up CORS, Authorizer, iamRoleStatements
@@ -309,7 +313,7 @@ resources:
         NotificationConfiguration:
           LambdaConfigurations:
             - Event: s3:ObjectCreated:*
-              Function: !GetAtt PublishImgNotificationsLambdaFunction.Arn
+              Function: !GetAtt SendUploadNotificationsLambdaFunction.Arn
         CorsConfiguration:
           CorsRules:
             - AllowedOrigins:
@@ -341,10 +345,10 @@ resources:
               Resource: 'arn:aws:s3:::${self:provider.environment.ATTACHMENT_S3_BUCKET}/*'
         Bucket: !Ref AttachmentsBucket
 
-    PublishImgChangeNotificationsPolicy:
+    SendUploadNotificationsPermission:
       Type: AWS::Lambda::Permission
       Properties:
-        FunctionName: !Ref PublishImgNotificationsLambdaFunction
+        FunctionName: !Ref SendUploadNotificationsLambdaFunction
         Principal: s3.amazonaws.com
         Action: lambda:InvokeFunction
         SourceAccount: !Ref AWS::AccountId

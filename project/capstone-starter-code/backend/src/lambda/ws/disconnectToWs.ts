@@ -12,7 +12,7 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
 
     const connectionId = event.requestContext.connectionId
     const key = {
-        id: connectionId
+        connectionId: connectionId
     }
 
     await docClient.delete({
@@ -22,6 +22,6 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
 
     return {
         statusCode: 200,
-        body: 'Disconnected'
+        body: JSON.stringify({ msg: 'disconnected'})
     }
 }

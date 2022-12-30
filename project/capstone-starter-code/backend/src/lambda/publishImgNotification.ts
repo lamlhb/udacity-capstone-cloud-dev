@@ -47,7 +47,7 @@ async function publishMessageToClient(connections, msg) {
     for (const con of connections.Items) {
         try {
             await apiGateway.postToConnection({
-                ConnectionId: con.id,
+                ConnectionId: con.connectionId,
                 Data: JSON.stringify(msg),
             }).promise()
         } catch (e) {
@@ -56,7 +56,7 @@ async function publishMessageToClient(connections, msg) {
                 await docClient.delete({
                     TableName: connectionsTable,
                     Key: {
-                        id: con.id
+                        connectionId: con.connectionId
                     }
                 }).promise()
 
