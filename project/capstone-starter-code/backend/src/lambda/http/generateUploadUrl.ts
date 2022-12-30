@@ -19,7 +19,7 @@ export const handler = middy(
       // update url first
       updateAttachmentUrl(todoId, getUserId(event), attachId);
 
-      const preSign = await getSignedUploadUrl(attachId);
+      const preSign = await getSignedUploadUrl(todoId, attachId);
 
       return {
         statusCode: 200,

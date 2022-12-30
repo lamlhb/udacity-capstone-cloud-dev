@@ -17,14 +17,14 @@ export class attachmentUtils {
     private readonly urlExpiration = process.env.SIGNED_URL_EXPIRATION
   ) {}
 
-  getAttachmentUrl(attachmentId: string): string {
-    return `https://${this.bucketName}.s3.amazonaws.com/${attachmentId}`;
+  getAttachmentUrl(todoId: string, attachmentId: string): string {
+    return `https://${this.bucketName}.s3.amazonaws.com/${todoId}/${attachmentId}`;
   }
 
-  async getUploadUrlToS3(attachmentId: string): Promise<string> {
+  async getUploadUrlToS3(todoId: string, attachmentId: string): Promise<string> {
     return this.s3.getSignedUrl('putObject', {
       Bucket: this.bucketName,
-      Key: attachmentId,
+      Key: todoId + '/' + attachmentId,
       Expires: parseInt(this.urlExpiration)
     })
   }

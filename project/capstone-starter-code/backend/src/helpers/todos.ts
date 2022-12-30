@@ -66,7 +66,7 @@ export async function deleteToDoItem(userId: string, todoId: string) {
 
 export async function updateAttachmentUrl(todoId: string, userId: string, attachmentId: string) {
 
-  const attachmentUrl = await todosStorage.getAttachmentUrl(attachmentId);
+  const attachmentUrl = await todosStorage.getAttachmentUrl(todoId, attachmentId);
 
   const currentItem = await todosAccess.getToDoItem(todoId, userId)
 
@@ -75,8 +75,8 @@ export async function updateAttachmentUrl(todoId: string, userId: string, attach
   await todosAccess.updateAttachmentUrl(todoId, userId, attachmentUrl)
 }
 
-export async function getSignedUploadUrl(attachmentId: string): Promise<string> {
-  return await todosStorage.getUploadUrlToS3(attachmentId);
+export async function getSignedUploadUrl(todoId: string, attachmentId: string): Promise<string> {
+  return await todosStorage.getUploadUrlToS3(todoId, attachmentId);
 }
 
 export async function resizeTodoImg(todoId: string, userId: string, resizeImage: ResizeImageRequest) {
